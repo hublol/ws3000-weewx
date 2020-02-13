@@ -1,2 +1,7 @@
-# WS-3000_WeeWx
-A WeeWx driver for the WS-3000 station
+# WS-3000 WeeWx driver
+
+## Description
+
+## Download
+
+## Installation
