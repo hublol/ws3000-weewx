@@ -61,7 +61,7 @@ cd /home/weewx
 ./bin/wee_config --list-drivers
 ----
 +
-This should product such as (look for `user.ws3000`):
+This should produce output similar to (look for `user.ws3000`):
 +
 ----
 Module name              Driver name    Version  Status                   
