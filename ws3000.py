@@ -128,7 +128,8 @@ v0.1 - Initial release
 """
 
 import time
-import syslog
+#import syslog
+import logging
 import usb.core
 import usb.util
 import sys
@@ -140,7 +141,7 @@ import usb
 import weewx.drivers
 import weewx.wxformulas
 
-DRIVER_NAME = 'WS3000'weewx.drivers.WS3000
+DRIVER_NAME = 'WS3000'
 DRIVER_VERSION = "0.2"
 
 
@@ -152,20 +153,27 @@ def confeditor_loader():
     return WS3000ConfEditor()
 
 
+log = logging.getLogger(__name__)
+
+
 def logmsg(level, msg):
-    syslog.syslog(level, 'ws3000: %s' % msg)
+    # syslog.syslog(level, 'ws3000: %s' % msg)
+    log.debug(msg)
 
 
 def logdbg(msg):
-    logmsg(syslog.LOG_DEBUG, msg)
+    # logmsg(syslog.LOG_DEBUG, msg)
+    log.debug(msg)
 
 
 def loginf(msg):
-    logmsg(syslog.LOG_INFO, msg)
+    # logmsg(syslog.LOG_INFO, msg)
+    log.info(msg)
 
 
 def logerr(msg):
-    logmsg(syslog.LOG_ERR, msg)
+    # logmsg(syslog.LOG_ERR, msg)
+    log.error(msg)
 
 
 def tohex(buf):
@@ -179,7 +187,7 @@ class WS3000(weewx.drivers.AbstractDevice):
     """Driver for the WS3000 station."""
 
     DEFAULT_MAP = {
-        'extraTemp1': 't_1',weewx.drivers.WS3000
+        'extraTemp1': 't_1',
         'extraTemp2': 't_2',
         'extraTemp3': 't_3',
         'extraTemp4': 't_4',
@@ -590,8 +598,8 @@ if __name__ == '__main__':
 
     usage = """%prog [options] [--debug] [--help]"""
 
-    syslog.openlog('ws3000', syslog.LOG_PID | syslog.LOG_CONS)
-    syslog.setlogmask(syslog.LOG_UPTO(syslog.LOG_INFO))
+#    syslog.openlog('ws3000', syslog.LOG_PID | syslog.LOG_CONS)
+#    syslog.setlogmask(syslog.LOG_UPTO(syslog.LOG_INFO))
     parser = optparse.OptionParser(usage=usage)
     parser.add_option('--version', action='store_true',
                       help='display driver version')
@@ -605,8 +613,8 @@ if __name__ == '__main__':
         print "driver version %s" % DRIVER_VERSION
         exit(1)
 
-    if options.debug:
-        syslog.setlogmask(syslog.LOG_UPTO(syslog.LOG_DEBUG))
+#    if options.debug:
+#        syslog.setlogmask(syslog.LOG_UPTO(syslog.LOG_DEBUG))
 
     if options.test == 'driver':
         driver = WS3000()

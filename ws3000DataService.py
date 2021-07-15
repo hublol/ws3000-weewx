@@ -23,23 +23,31 @@ import sys
 from weewx import units
 from weewx.engine import StdService
 import time
-import syslog
+#import syslog
+import logging
+
+
+log = logging.getLogger(__name__)
 
 
 def logmsg(level, msg):
-    syslog.syslog(level, 'ws3000DataService: %s' % msg)
+    # syslog.syslog(level, 'ws3000: %s' % msg)
+    log.debug(msg)
 
 
 def logdbg(msg):
-    logmsg(syslog.LOG_DEBUG, msg)
+    # logmsg(syslog.LOG_DEBUG, msg)
+    log.debug(msg)
 
 
 def loginf(msg):
-    logmsg(syslog.LOG_INFO, msg)
+    # logmsg(syslog.LOG_INFO, msg)
+    log.info(msg)
 
 
 def logerr(msg):
-    logmsg(syslog.LOG_ERR, msg)
+    # logmsg(syslog.LOG_ERR, msg)
+    log.error(msg)
 
 
 class AddWS300Data(StdService):
