@@ -352,7 +352,7 @@ class WS3000(weewx.drivers.AbstractDevice):
         # The following is normally not required... could be removed?
         try:
             usb.util.claim_interface(self.device, self.interface)
-        except usb.USBError, e:
+        except usb.USBError as e:
             self.closePort()
             logerr("Unable to claim USB interface: %s" % e)
             raise weewx.WeeWxIOError(e)
@@ -579,8 +579,7 @@ class WS3000ConfEditor(weewx.drivers.AbstractConfEditor):
 """
 
     def modify_config(self, config_dict):
-        print """
-Changing the schema to include extraTemp and extraHumid colums """
+        print("""Changing the schema to include extraTemp and extraHumid colums """)
         config_dict['DataBindings']['wx_binding']['schema'] = 'user.ws3000Extensions.ws3000Schema'
 
 
@@ -610,7 +609,7 @@ if __name__ == '__main__':
     (options, args) = parser.parse_args()
 
     if options.version:
-        print "driver version %s" % DRIVER_VERSION
+        print("driver version %s" % DRIVER_VERSION)
         exit(1)
 
 #    if options.debug:
@@ -620,7 +619,7 @@ if __name__ == '__main__':
         driver = WS3000()
         try:
             for p in driver.genLoopPackets():
-                print p
+                print(p)
         finally:
             driver.closePort()
     else:
