@@ -37,23 +37,27 @@ For additional information, please refer to the `ws3000.py` file.
 
 ## Installation
 
-### Traditional installation
+[NOTE]
+====
+[%hardbreaks]
+The instructions below assume that weewx was installed using setup.py, as documented here:
+http://www.weewx.com/docs/setup.htm
+and that the default location has been used (`/home/weewx`).
+====
 
-. Download the WS-3000 extension package from the Releases page:
+. Download `ws3000.py` and `ws3000Extensions.py`.
+
+. Copy the two files to `/home/weewx/bin/user`:
 +
 ----
-wget https://github.com/hublol/WS-3000_WeeWx/archive/refs/tags/weewx-ws3000-0.2.tar.gz
-----
-
-. Install the extension:
-+
-----
-wee_extension --install weewx-ws3000-x.x.tar.gz
+cp ws3000.py /home/weewx/bin/user
+cp ws3000Extensions.py /home/weewx/bin/user
 ----
 
 . Check if weewx correctly detects the driver:
 +
 ----
+cd /home/weewx
 ./bin/wee_config --list-drivers
 ----
 +
@@ -100,10 +104,6 @@ Add the following section to the configuration file (this is the minimal configu
 cd /home/weewx
 PYTHONPATH=bin python bin/user/ws3000.py
 ----
-
-### Docker installation
-
-
 
 ## Configuration options
 
