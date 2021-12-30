@@ -37,49 +37,33 @@ For additional information, please refer to the `ws3000.py` file.
 
 ## Installation
 
-### Traditional installation
+1) Download the WS-3000 extension package from the Releases page:
 
-. Download the WS-3000 extension package from the Releases page:
-+
-----
-wget https://github.com/hublol/WS-3000_WeeWx/archive/refs/tags/weewx-ws3000-0.2.tar.gz
-----
+wget -O weewx-ws3000.tar.gz https://github.com/hublol/WS-3000_WeeWx/archive/refs/tags/weewx-ws3000-0.2.tar.gz
 
-. Install the extension:
-+
-----
-wee_extension --install weewx-ws3000-x.x.tar.gz
-----
+2) Install the extension:
 
-. Check if weewx correctly detects the driver:
-+
-----
+wee_extension --install weewx-ws3000.tar.gz
+
+3) Check if weewx correctly detects the driver:
+
 ./bin/wee_config --list-drivers
-----
-+
+
 This should produce output similar to (look for `user.ws3000`):
-+
-----
+
 Module name              Driver name    Version  Status                   
   user.cmon                ComputerMonitor0.16
   user.ws3000              WS3000         0.2
   weewx.drivers.acurite    AcuRite        0.24
-...
-----
 
-. Edit the `weewx.conf` file to add a new station section.
-+
-[NOTE]
-====
-For a brand new installation only (no already configured `weex.conf`), this can be done using the following command:
-----
+4) Edit the `weewx.conf` file to add a new station section.
+
+NOTE: For a brand new installation only (no already configured `weex.conf`), this can be done using the following command:
+
 ./bin/wee_config --reconfigure
-----
-====
-+
+
 Add the following section to the configuration file (this is the minimal configuration required):
-+
-----
+
 [WS3000]
     # This section is for the Ambient Weather WS3000
 
@@ -92,18 +76,11 @@ Add the following section to the configuration file (this is the minimal configu
     # [Optional] USB read/write timeout (helps on Raspberry Pi)
     # Default is 1000
     timeout =  1000
-----
 
-. Test the driver to check if it can successfully retrieve the data from the station:
-+
-----
+5) Test the driver to check if it can successfully retrieve the data from the station:
+
 cd /home/weewx
 PYTHONPATH=bin python bin/user/ws3000.py
-----
-
-### Docker installation
-
-
 
 ## Configuration options
 
