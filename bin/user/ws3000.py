@@ -468,7 +468,7 @@ class WS3000(weewx.drivers.AbstractDevice):
     # ==========================================================================
 
     def _get_cmd_name(self, hex_command):
-        return self.COMMANDS.keys()[self.COMMANDS.values().index(hex_command)]
+        return list(self.COMMANDS.keys())[list(self.COMMANDS.values()).index(hex_command)]
 
     def _get_raw_data(self, hex_command=COMMANDS['sensor_values']):
         """Get a sequence of bytes from the console."""

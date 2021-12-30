@@ -103,7 +103,113 @@ PYTHONPATH=bin python bin/user/ws3000.py
 
 ### Docker installation
 
+[NOTE]
+====
+Those instructions explain how to run weewx using a pre-built image,
+not how to build your own image.
 
+The image used here is: +
+https://hub.docker.com/r/mitct02/weewx/
+====
+
+. Create the required directories for the volumes (for persistent data):
++
+----
+WEEWX_IMAGE_TAG=v4.5.1
+WEEWX_CONTAINER_NAME=weewx
+WEEWX_DIR=/share/homes/docker/containers/weewx
+
+mkdir -p ${WEEWX_DIR}/extensions
+mkdir -p ${WEEWX_DIR}/public_html
+mkdir -p ${WEEWX_DIR}/archive
+mkdir -p ${WEEWX_DIR}/bin
+----
+
+. First start the container without mounting any volumes,
+  and extract the required files (`bin/user` directory):
++
+----
+# Run docker without volumes to get the initial data
+docker run -d --name ${WEEWX_CONTAINER_NAME} \
+mitct02/weewx:${WEEWX_IMAGE_TAG}
+
+# Copy the bin/user data from the container
+docker cp ${WEEWX_CONTAINER_NAME}:/home/weewx/bin/user ${WEEWX_DIR}/bin/user
+ls -l {WEEWX_DIR}/bin/user
+
+# Get the default config file
+docker cp ${WEEWX_CONTAINER_NAME}:/home/weewx/weewx.conf ${WEEWX_DIR}/weewx.conf
+----
++
+WARNING: This step is required to ensure that customizations deployed in `bin/user` will persist.
+But this means that the `extensions.py` and `__init__.py` files will not be updated when the image is updated. +
+If they are changed in a new release of weewx,
+this could be an issue, and they will have to be manually refreshed.
+
+. Restart the container,
+  this time with the volumes.
+  Then stop weewx before deploying the extensions:
++
+----
+# Restart the container with the volumes
+docker stop ${WEEWX_CONTAINER_NAME} && docker rm ${WEEWX_CONTAINER_NAME}
+
+docker run -d --name ${WEEWX_CONTAINER_NAME} \
+--volume ${WEEWX_DIR}/extensions:/home/weewx/extensions \
+--volume ${WEEWX_DIR}/public_html:/home/weewx/public_html \
+--volume ${WEEWX_DIR}/archive:/home/weewx/archive \
+--volume ${WEEWX_DIR}/bin/user:/home/weewx/bin/user \
+mitct02/weewx:${WEEWX_IMAGE_TAG}
+
+# prevent weewx from starting automatically and restart
+docker exec ${WEEWX_CONTAINER_NAME} chmod -x /etc/service/weewx/run
+
+docker stop ${WEEWX_CONTAINER_NAME} && docker start ${WEEWX_CONTAINER_NAME}
+----
++
+NOTE: Stopping weewx using runsv or sv unfortunately doesn't work at the time of writing. Hence the trick used above, to prevent runsv from starting weewx.
+
+. Install the WS-3000 driver (and other extensions if needed):
++
+----
+# Install the WS-3000 driver
+cd ${WEEWX_DIR}/extensions
+wget -O weewx-ws3000.tar.gz https://github.com/hublol/WS-3000_WeeWx/archive/refs/tags/weewx-ws3000-0.3.tar.gz
+docker exec ${WEEWX_CONTAINER_NAME} /home/weewx/bin/wee_extension --install /home/weewx/extensions/weewx-ws3000.tar.gz
+docker exec ${WEEWX_CONTAINER_NAME} /home/weewx/bin/wee_extension --list
+----
+
+. Get the modified weewx.conf file from the container,
+  then recreate the container with the file mounted as a volume:
++
+----
+# Get the modified config file
+docker cp ${WEEWX_CONTAINER_NAME}:/home/weewx/weewx.conf ${WEEWX_DIR}/weewx.conf
+
+# Then run with the all the volumes (including config file and devices)
+docker stop ${WEEWX_CONTAINER_NAME} && docker rm ${WEEWX_CONTAINER_NAME}
+
+docker run -d --name ${WEEWX_CONTAINER_NAME} \
+--volume ${WEEWX_DIR}/extensions:/home/weewx/extensions \
+--volume ${WEEWX_DIR}/public_html:/home/weewx/public_html \
+--volume ${WEEWX_DIR}/bin/user:/home/weewx/bin/user \
+--volume ${WEEWX_DIR}/weewx.conf:/home/weewx/weewx.conf \
+--volume ${WEEWX_DIR}/archive:/home/weewx/archive \
+--device=/dev/ttyUSB0  \
+--privileged \
+-v /dev/bus/usb:/dev/bus/usb \
+mitct02/weewx:${WEEWX_IMAGE_TAG}
+----
+
+[NOTE]
+====
+There has to be a better way to install extensions when running weewx in docker...
+but none that I found so far.
+The main issue to deal with is access to the weewx.conf file:
+
+* wee_extension cannot modify the file when weewx is running.
+* wee_extesion cannot modify the file when it is mounted as a volume.
+====
 
 ## Configuration options
 
