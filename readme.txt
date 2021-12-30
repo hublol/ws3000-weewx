@@ -39,7 +39,7 @@ For additional information, please refer to the `ws3000.py` file.
 
 1) Download the WS-3000 extension package from the Releases page:
 
-wget -O weewx-ws3000.tar.gz https://github.com/hublol/WS-3000_WeeWx/archive/refs/tags/weewx-ws3000-0.2.tar.gz
+wget -O weewx-ws3000.tar.gz https://github.com/hublol/WS-3000_WeeWx/archive/refs/tags/weewx-ws3000-0.3.tar.gz
 
 2) Install the extension:
 

@@ -9,7 +9,7 @@ def loader():
 class WS3000Installer(ExtensionInstaller):
     def __init__(self):
         super(WS3000Installer, self).__init__(
-            version="0.2",
+            version="0.3",
             name='WS-3000',
             description='Weewx driver for the WS-3000 station',
             author="hublol",
