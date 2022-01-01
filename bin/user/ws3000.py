@@ -142,7 +142,7 @@ import weewx.drivers
 import weewx.wxformulas
 
 DRIVER_NAME = 'WS3000'
-DRIVER_VERSION = "0.2"
+DRIVER_VERSION = "0.3"
 
 
 def loader(config_dict, engine):
