@@ -35,6 +35,21 @@ but if this is still not sufficient futher increase the timeout in the weewx con
 
 For additional information, please refer to the `ws3000.py` file.
 
+## Database schema
+
+The extended schema (`schemas.wview_extended`) can be used as is (default in 4.x versions or above).
+In this case the `ws3000Extensions.py` file is not required.
+
+But when using the old 3.x default schema (`schemas.wview`),
+additional columns must be created in the database.
+This can be done by specifying a custom schema like this:
+
+----
+[DataBindings]
+    [[wx_binding]]
+        schema = user.ws3000Extensions.ws3000Schema
+----
+
 ## Installation
 
 . Download the WS-3000 extension package from the Releases page:
